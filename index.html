@@ -18,7 +18,7 @@
     h1 {
       font-size: 3rem;
       margin-bottom: 0.3rem;
-      color: #61dafb;
+      color: #e63946;
     }
     .connections {
       margin: 1rem 0;
@@ -27,7 +27,7 @@
       line-height: 1.6;
     }
     .connections a {
-      color: #61dafb;
+      color: #e63946;
       text-decoration: none;
       font-weight: bold;
     }
@@ -41,12 +41,6 @@
       box-shadow: none;
       outline: none;
     }
-    img:focus,
-    img:active {
-      outline: none;
-      box-shadow: none;
-      border: none;
-    }
     .subtitle {
       font-size: 1.3rem;
       font-style: italic;
@@ -59,7 +53,7 @@
       text-align: center;
     }
     .projects h2 {
-      color: #61dafb;
+      color: #e63946;
       font-size: 2rem;
       margin-bottom: 1rem;
     }
@@ -77,25 +71,45 @@
     }
     .projects a:hover {
       text-decoration: underline;
-      color: #61dafb;
+      color: #e63946;
+    }
+    #cursor-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    #play-music {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: #e63946;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 10000;
     }
   </style>
+  <script defer src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
+  <button id="play-music">Play Music</button>
+  <div style="display:none;">
+    <div id="yt-player"></div>
+  </div>
+  <canvas id="cursor-canvas"></canvas>
   <h1>Cytrix</h1>
-
   <div class="connections">
     <div>Connections</div>
     <div><a href="https://github.com/cytrixandtrikz" target="_blank" rel="noopener noreferrer">cytrixandtrikz on GitHub!</a></div>
     <div><a href="https://discord.gg/BZmpZAmanp" target="_blank" rel="noopener noreferrer">My Discord!</a></div>
   </div>
-
   <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/775dfae9-f9b5-46c9-bcd8-62e7d40ba177/dg8lhx6-9b57be67-b9bd-4a09-9299-dc5cbd789ba8.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzc3NWRmYWU5LWY5YjUtNDZjOS1iY2Q4LTYyZTdkNDBiYTE3N1wvZGc4bGh4Ni05YjU3YmU2Ny1iOWJkLTRhMDktOTI5OS1kYzVjYmQ3ODliYTguZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.--rT4g4fdIdT8L6A3iNbyWPqvBx9NVayq4_lXygw5kk" alt="Cool GIF" />
-
-  <div class="subtitle">
-    Hi, I'm Cytrix. I've been a code dev for two years, and I make websites for people if you need one, hit me up! :)
-  </div>
-
+  <div class="subtitle">Hi, I'm Cytrix. I've been a code dev for two years, and I make websites for people if you need one, hit me up! :)</div>
   <div class="projects">
     <h2>Some of my work :D</h2>
     <ul>
@@ -103,8 +117,72 @@
       <li><a href="https://cytrixandtrikz.github.io/vault.website.github.io/" target="_blank" rel="noopener noreferrer">vault website</a></li>
       <li><a href="https://cytrixandtrikz.github.io/1s_2p/" target="_blank" rel="noopener noreferrer">1s_2p's art website</a></li>
       <li><a href="https://cytrixandtrikz.github.io/-/" target="_blank" rel="noopener noreferrer">dash's website</a></li>
-      <li><a href="" target="_blank" rel="noopener noreferrer"></a></li>  
-  </ul>
+    </ul>
   </div>
+  <script defer>
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('yt-player', {
+        height: '0',
+        width: '0',
+        videoId: 'G-FGiICah8Q',
+        playerVars: {
+          autoplay: 0,
+          loop: 1,
+          controls: 0,
+          mute: 0
+        },
+        events: {
+          onReady: () => {
+            document.getElementById('play-music').addEventListener('click', () => {
+              player.playVideo();
+              document.getElementById('play-music').style.display = 'none';
+            });
+          }
+        }
+      });
+    }
+
+    (function() {
+      const canvas = document.getElementById('cursor-canvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [], w, h;
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      class Particle {
+        constructor(x,y) {
+          this.x=x;this.y=y;
+          this.size=Math.random()*5+2;
+          this.life=100;
+          this.vx=(Math.random()-0.5)*2;
+          this.vy=(Math.random()-0.5)*2;
+          this.color=['#e63946','#000000'][Math.floor(Math.random()*2)];
+        }
+        update() {
+          this.x+=this.vx; this.y+=this.vy;
+          this.life-=2; this.size*=0.96;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+          ctx.fillStyle=this.color;
+          ctx.fill();
+        }
+      }
+      window.addEventListener('mousemove', e => {
+        for (let i=0;i<3;i++) particles.push(new Particle(e.clientX,e.clientY));
+      });
+      (function anim() {
+        ctx.clearRect(0,0,w,h);
+        particles=particles.filter(p=>p.life>0&&p.size>0.5);
+        particles.forEach(p=>{p.update();p.draw();});
+        requestAnimationFrame(anim);
+      })();
+    })();
+  </script>
 </body>
 </html>
