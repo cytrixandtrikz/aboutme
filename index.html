@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cytrix - About Me</title>
+  <title>CYTRIX</title>
+  <script>
+    const titleFrames = [
+      "CYTRIX", "CYTRI", "CYTR", "CYT", "CY", "C",
+      "CY", "CYT", "CYTR", "CYTRI", "CYTRIX"
+    ];
+    let tIndex = 0;
+    setInterval(() => {
+      document.title = titleFrames[tIndex];
+      tIndex = (tIndex + 1) % titleFrames.length;
+    }, 300);
+  </script>
+  <script defer src="https://www.youtube.com/iframe_api"></script>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -94,7 +106,6 @@
       z-index: 10000;
     }
   </style>
-  <script defer src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
   <button id="play-music">Play Music</button>
